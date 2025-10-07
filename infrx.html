@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Cuaca</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #a2d9ff, #f0f8ff);
+            padding: 30px;
+        }
+        .container {
+            background: linear-gradient(180deg, #b3e5fc, #81d4fa, #4fc3f7);
+            color: #033e6b;
+            width: 420px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0, 115, 230, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .lokasi-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input {
+            padding: 8px;
+            width: 200px;
+            border: 2px solid #0288d1;
+            border-radius: 8px;
+            outline: none;
+        }
+        input:focus {
+            border-color: #01579b;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #0288d1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #0277bd;
+        }
+        h3 {
+            margin-bottom: 8px;
+            color: #1b5e20;
+        }
+        .section {
+            background: linear-gradient(180deg, #d7ccc8, #a1887f);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        }
+        .label {
+            font-weight: bold;
+        }
+        hr {
+            border: none;
+            height: 2px;
+            background-color: #81d4fa;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lokasi-box">
+            <label for="inputLokasi" class="label">Lokasi:</label>
+            <input type="text" id="inputLokasi" placeholder="Masukkan nama kecamatan">
+            <button id="btnGet">Get</button>
+        </div>
+        <hr>
+
+        <div class="section">
+            <h3>Cuaca</h3>
+            <p><span class="label">Suhu Celcius:</span> <span id="temp_c">-</span> °C</p>
+            <p><span class="label">Suhu Fahrenheit:</span> <span id="temp_f">-</span> °F</p>
+            <p><span class="label">Kelembapan:</span> <span id="humidity">-</span> %</p>
+        </div>
+
+        <div class="section">
+            <h3>Lokasi</h3>
+            <p><span class="label">Negara:</span> <span id="country">-</span></p>
+            <p><span class="label">Provinsi:</span> <span id="region">-</span></p>
+            <p><span class="label">Kecamatan:</span> <span id="city">-</span></p>
+            <p><span class="label">Longitude:</span> <span id="lon">-</span></p>
+            <p><span class="label">Latitude:</span> <span id="lat">-</span></p>
+        </div>
+    </div>
+
+    <script>
+        $("#btnGet").click(function() {
+            const lokasi = $("#inputLokasi").val();
+            if (lokasi === "") {
+                alert("Masukkan nama kecamatan terlebih dahulu!");
+                return;
+            }
+
+            const apiKey = "811f77a27d104243bda65513250710";
+            const urlapi = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lokasi}&aqi=no`;
+
+            $.ajax({
+                url: urlapi,
+                method: "GET",
+                success: function(data) {
+                    console.log(data);
+                    $("#temp_c").text(data.current.temp_c);
+                    $("#temp_f").text(data.current.temp_f);
+                    $("#humidity").text(data.current.humidity);
+
+                    $("#country").text(data.location.country);
+                    $("#region").text(data.location.region);
+                    $("#city").text(data.location.name);
+                    $("#lon").text(data.location.lon);
+                    $("#lat").text(data.location.lat);
+                },
+                error: function() {
+                    alert("Kecamatan tidak ditemukan atau terjadi kesalahan!");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
